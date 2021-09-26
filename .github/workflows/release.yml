@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Set to force version number, e.g., when no tag exists.
-      LOCATE_VERSION: TEST-0.0.4
+      LOCATE_VERSION: TEST-0.0.5
     outputs:
       upload_url: ${{ steps.release.outputs.upload_url }}
       locate_version: ${{ env.LOCATE_VERSION }}
@@ -156,7 +156,7 @@ jobs:
           echo "ASSET=$staging.zip" >> $GITHUB_ENV
         else
           # The man page is only generated on Unix systems. ¯\_(ツ)_/¯
-          cp "$outdir"/rg.1 "$staging/doc/"
+          #cp "$outdir"/locate.1 "$staging/doc/"
           cp "target/${{ matrix.target }}/release/locate" "$staging/"
           tar czf "$staging.tar.gz" "$staging"
           echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV

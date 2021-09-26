@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Set to force version number, e.g., when no tag exists.
-      LOCATE_VERSION: TEST-0.0.2
+      LOCATE_VERSION: TEST-0.0.3
     outputs:
       upload_url: ${{ steps.release.outputs.upload_url }}
       locate_version: ${{ env.LOCATE_VERSION }}

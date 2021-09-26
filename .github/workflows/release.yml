@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Set to force version number, e.g., when no tag exists.
-      LOCATE_VERSION: TEST-0.0.3
+      LOCATE_VERSION: TEST-0.0.4
     outputs:
       upload_url: ${{ steps.release.outputs.upload_url }}
       locate_version: ${{ env.LOCATE_VERSION }}
@@ -145,10 +145,10 @@ jobs:
         staging="locate-${{ needs.create-release.outputs.locate_version }}-${{ matrix.target }}"
         mkdir -p "$staging"/{complete,doc}
 
-        cp {README.md,COPYING,UNLICENSE,LICENSE-MIT} "$staging/"
-        cp {CHANGELOG.md,FAQ.md,GUIDE.md} "$staging/doc/"
-        cp "$outdir"/{locate.bash,locate.fish,_locate.ps1} "$staging/complete/"
-        cp complete/_locate "$staging/complete/"
+        cp {README.md,LICENSE.md} "$staging/"
+        #cp {CHANGELOG.md,FAQ.md,GUIDE.md} "$staging/doc/"
+        #cp "$outdir"/{locate.bash,locate.fish,_locate.ps1} "$staging/complete/"
+        #cp complete/_locate "$staging/complete/"
 
         if [ "${{ matrix.os }}" = "windows-2019" ]; then
           cp "target/${{ matrix.target }}/release/locate.exe" "$staging/"

@@ -23,7 +23,7 @@ on:
     # branches:
     # - ag/work
     tags:
-    - "[0-9]+.[0-9]+.[0-9]+"
+    - "v[0-9]+.[0-9]+.[0-9]+"
 jobs:
   create-release:
     name: create-release
@@ -33,7 +33,7 @@ jobs:
       # RG_VERSION: TEST-0.0.0
     outputs:
       upload_url: ${{ steps.release.outputs.upload_url }}
-      rg_version: ${{ env.RG_VERSION }}
+      locate_version: ${{ env.LOCATE_VERSION }}
     steps:
       - name: Get the release version from the tag
         shell: bash
@@ -42,16 +42,16 @@ jobs:
           # Apparently, this is the right way to get a tag name. Really?
           #
           # See: https://github.community/t5/GitHub-Actions/How-to-get-just-the-tag-name/m-p/32167/highlight/true#M1027
-          echo "RG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-          echo "version is: ${{ env.RG_VERSION }}"
+          echo "LOCATE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          echo "version is: ${{ env.LOCATE_VERSION }}"
       - name: Create GitHub release
         id: release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.RG_VERSION }}
-          release_name: ${{ env.RG_VERSION }}
+          tag_name: ${{ env.LOCATE_VERSION }}
+          release_name: ${{ env.LOCATE_VERSION }}
 
   build-release:
     name: build-release
@@ -129,7 +129,7 @@ jobs:
 
     - name: Strip release binary (linux and macos)
       if: matrix.build == 'linux' || matrix.build == 'macos'
-      run: strip "target/${{ matrix.target }}/release/rg"
+      run: strip "target/${{ matrix.target }}/release/locate"
 
     - name: Strip release binary (arm)
       if: matrix.build == 'linux-arm'
@@ -138,19 +138,19 @@ jobs:
           "$PWD/target:/target:Z" \
           rustembedded/cross:arm-unknown-linux-gnueabihf \
           arm-linux-gnueabihf-strip \
-          /target/arm-unknown-linux-gnueabihf/release/rg
+          /target/arm-unknown-linux-gnueabihf/release/locate
 
     - name: Build archive
       shell: bash
       run: |
         outdir="$(ci/cargo-out-dir "${{ env.TARGET_DIR }}")"
-        staging="locate-${{ needs.create-release.outputs.rg_version }}-${{ matrix.target }}"
+        staging="locate-${{ needs.create-release.outputs.locate_version }}-${{ matrix.target }}"
         mkdir -p "$staging"/{complete,doc}
 
         cp {README.md,COPYING,UNLICENSE,LICENSE-MIT} "$staging/"
         cp {CHANGELOG.md,FAQ.md,GUIDE.md} "$staging/doc/"
-        cp "$outdir"/{rg.bash,rg.fish,_rg.ps1} "$staging/complete/"
-        cp complete/_rg "$staging/complete/"
+        cp "$outdir"/{locate.bash,locate.fish,_locate.ps1} "$staging/complete/"
+        cp complete/_locate "$staging/complete/"
 
         if [ "${{ matrix.os }}" = "windows-2019" ]; then
           cp "target/${{ matrix.target }}/release/locate.exe" "$staging/"
@@ -159,7 +159,7 @@ jobs:
         else
           # The man page is only generated on Unix systems. ¯\_(ツ)_/¯
           cp "$outdir"/rg.1 "$staging/doc/"
-          cp "target/${{ matrix.target }}/release/rg" "$staging/"
+          cp "target/${{ matrix.target }}/release/locate" "$staging/"
           tar czf "$staging.tar.gz" "$staging"
           echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
         fi

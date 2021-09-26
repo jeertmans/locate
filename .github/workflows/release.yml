@@ -20,24 +20,24 @@ name: Release
 on:
   push:
     # Enable when testing release infrastructure on a branch.
-    # branches:
-    # - ag/work
+    branches:
+    - main
     tags:
     - "v[0-9]+.*"
 jobs:
   create-release:
     name: create-release
     runs-on: ubuntu-latest
-    # env:
+    env:
       # Set to force version number, e.g., when no tag exists.
-      # RG_VERSION: TEST-0.0.0
+      LOCATE_VERSION: TEST-0.0.0
     outputs:
       upload_url: ${{ steps.release.outputs.upload_url }}
       locate_version: ${{ env.LOCATE_VERSION }}
     steps:
       - name: Get the release version from the tag
         shell: bash
-        if: env.RG_VERSION == ''
+        if: env.LOCATE_VERSION == ''
         run: |
           # Apparently, this is the right way to get a tag name. Really?
           #

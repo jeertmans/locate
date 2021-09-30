@@ -22,8 +22,12 @@ fn main() {
     let pattern = matches.value_of("PATTERN").unwrap();
     let directory = matches.value_of("DIR").unwrap();
     let re = Regex::new(pattern).unwrap();
-    let min_depth: usize = matches.value_of("MIN_DEPTH").unwrap().parse().expect("Could not parse MIN_DEPTH into a `usize` value: please enter a valid unsigned integer.");
-    let max_depth_str = matches.value_of("MAX_DEPTH").expect("Could not parse MAX_DEPTH into a `usize` value: please enter a valid unsigned integer.");
+    let min_depth: usize = matches.value_of("MIN_DEPTH").unwrap().parse().expect(
+        "Could not parse MIN_DEPTH into a `usize` value: please enter a valid unsigned integer.",
+    );
+    let max_depth_str = matches.value_of("MAX_DEPTH").expect(
+        "Could not parse MAX_DEPTH into a `usize` value: please enter a valid unsigned integer.",
+    );
     let max_depth: usize = if max_depth_str.eq("-1") {
         ::std::usize::MAX
     } else {

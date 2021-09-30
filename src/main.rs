@@ -40,7 +40,7 @@ fn main() {
         .filter(|e| re.is_match(&e.file_name().to_string_lossy()));
 
     let iterator = if matches.is_present("EXE") {
-        Either::Left(iterator.filter(|e| e.path().is_executable()).into_iter())
+        Either::Left(iterator.filter(|e| e.path().is_executable()))
     } else {
         Either::Right(iterator)
     };

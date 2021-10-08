@@ -2,7 +2,7 @@ use clap::clap_app;
 use is_executable::IsExecutable;
 use itertools::Either;
 use regex::Regex;
-use walkdir::WalkDir;
+use jwalk::WalkDir;
 
 fn main() {
     let matches = clap_app!(myapp =>
